@@ -8,7 +8,7 @@ export default class GameCell extends React.Component {
 		super(props);
 	}
 	style() {
-		return { backgroundColor: this.props.cell.alive ? "black" : "white" };
+		return { backgroundColor: this.props.cell.alive ? this.props.cell.color.getColor() : "white" };
 	}
 	render() {
 		return (<div className={"gameCell"} style={this.style()}></div>);

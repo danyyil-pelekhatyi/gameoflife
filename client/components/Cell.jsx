@@ -1,10 +1,11 @@
 export default class Cell {
-	constructor(x, y, alive) {
+	constructor(x, y, alive, color) {
         this.x = x;
         this.y = y;
         this.alive = false;
         this.neighbours = 0;
         this.willSurvive = alive;
+        this.color = color;
     }
 
     updateCell(callback) {
@@ -15,7 +16,7 @@ export default class Cell {
 
     setNeighbours(n) {
     	this.neighbours = n;
-    	this.willSurvive = this.alive ? ( [2, 3].indexOf(n) > -1 ) : n == 3;
+    	this.willSurvive = this.alive ? ( [2, 3].indexOf(n.length) > -1 ) : n.length == 3;
 
     	let turnConsoleOff = true;
     	if (this.alive && !turnConsoleOff) {

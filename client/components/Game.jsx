@@ -4,6 +4,8 @@
 import React from 'react';
 import Column from '../components/Column.jsx';
 import Cell from '../components/Cell.jsx';
+import Color from '../components/Color.jsx';
+
 
 export default class Game extends React.Component {
 	constructor(props) {
@@ -19,7 +21,8 @@ export default class Game extends React.Component {
         			props.setup.indexOf(`[${x - 3}, ${y - 3}]`) > -1 ||
         			props.setup.indexOf(`[${this.width - x - 4}, ${y - 3}]`) > -1 ||
         			props.setup.indexOf(`[${x - 3}, ${this.height - y - 4}]`) > -1 ||
-        			props.setup.indexOf(`[${this.width - x - 4}, ${this.height - y - 4}]`) > -1);
+        			props.setup.indexOf(`[${this.width - x - 4}, ${this.height - y - 4}]`) > -1,
+        			new Color(Math.floor(Math.random() * 255), Math.floor(Math.random() * 255), Math.floor(Math.random() * 255)));
 	        	column.push(cell);
 	      	}
 	    	this.matrix.push(column);
@@ -59,27 +62,36 @@ export default class Game extends React.Component {
 	}
 
 	setNeighbours(x , y, endOfCycle = false) {
-		this.matrix[x][y].setNeighbours(this.countNeighbours(x, y));
+		this.matrix[x][y].setNeighbours(this.getNeighbours(x, y));
 		if (endOfCycle) {
 			this.setState({ matrix: this.matrix });
 			console.timeEnd("gameUpdate");
 		}
 	}
 
-	countNeighbours(x, y) {
+	getNeighbours(x, y) {
     	let up = y == this.matrix[0].length - 1,
     		down = y == 0,
     		left = x == 0,
-    		right = x == this.matrix.length - 1;
-			return 0
-				+ ( !down && this.matrix[x][y - 1].alive ? 1 : 0 )
-				+ ( !down && !left && this.matrix[x - 1][y - 1].alive ? 1 : 0 )
-				+ ( !left && this.matrix[x - 1][y].alive ? 1 : 0 )
-				+ ( !up && !left && this.matrix[x - 1][y + 1].alive ? 1 : 0 )
-				+ ( !up && this.matrix[x][y + 1].alive ? 1 : 0 )
-				+ ( !up && !right && this.matrix[x + 1][y + 1].alive ? 1 : 0 )
-				+ ( !right && this.matrix[x + 1][y].alive ? 1 : 0 )
-				+ ( !down && !right && this.matrix[x + 1][y - 1].alive ? 1 : 0 );
+    		right = x == this.matrix.length - 1,
+    		nc = [];
+			if ( !down && this.matrix[x][y - 1].alive)
+				nc.push(this.matrix[x][y - 1]);
+			if ( !down && !left && this.matrix[x - 1][y - 1].alive)
+				nc.push(this.matrix[x - 1][y - 1]);
+			if ( !left && this.matrix[x - 1][y].alive)
+				nc.push(this.matrix[x - 1][y]);
+			if ( !up && !left && this.matrix[x - 1][y + 1].alive)
+				nc.push(this.matrix[x - 1][y + 1]);
+			if ( !up && this.matrix[x][y + 1].alive)
+				nc.push(this.matrix[x][y + 1]);
+			if ( !up && !right && this.matrix[x + 1][y + 1].alive)
+				nc.push(this.matrix[x + 1][y + 1]);
+			if ( !right && this.matrix[x + 1][y].alive)
+				nc.push(this.matrix[x + 1][y]);
+			if ( !down && !right && this.matrix[x + 1][y - 1].alive)
+				nc.push(this.matrix[x + 1][y - 1]);
+			return nc;
 	}
 
 	startGameLoop() {
